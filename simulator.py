@@ -8,21 +8,18 @@ class Simulator:
     def __init__(self, machines):
         self.machines = machines
         self.current_time = 0
-        self.event_queue = [] # Stores tuples: (time, event_type, task, machine)
+        self.event_queue = []
         
     def add_task(self, task):
         """Schedules a task's arrival into the future."""
-        # Push the arrival event. Machine is None because it hasn't been assigned yet.
         heapq.heappush(self.event_queue, (task.submit_time, TASK_ARRIVAL, task, None))
         
     def run(self):
         """The main loop of the simulator."""
         print(f"--- Starting Simulation ---")
         while self.event_queue:
-            # Pop the earliest event
             time, event_type, task, machine = heapq.heappop(self.event_queue)
             
-            # Jump the simulation clock forward to this event's time
             self.current_time = time 
             
             if event_type == TASK_ARRIVAL:
@@ -39,8 +36,6 @@ class Simulator:
                 scheduled = True
                 task.start_time = self.current_time
                 
-                # IMPORTANT: Schedule the completion based on the ACTUAL runtime.
-                # (Later, the scheduling *decision* will be based on estimated runtime).
                 completion_time = self.current_time + task.actual_runtime
                 task.end_time = completion_time
                 
@@ -49,8 +44,6 @@ class Simulator:
                 break
                 
         if not scheduled:
-            # For a real cluster, we'd put it in a pending queue. 
-            # For now, we will just drop it to keep things simple.
             print(f"[Time {self.current_time:02d}] Task {task.task_id} DROPPED (No available resources)")
             
     def _handle_completion(self, task, machine):

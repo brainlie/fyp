@@ -7,7 +7,6 @@ class Task:
         self.actual_runtime = actual_runtime
         self.estimated_runtime = estimated_runtime
         
-        # State tracking for the simulator later
         self.start_time = None
         self.end_time = None
 
