@@ -1,23 +1,26 @@
-from workload_generator import create_task_with_error
+from models import Task
+from simulator import Simulator
 
-def test_uncertainty_model():
-    print("--- Testing Runtime Uncertainty ---")
-    
-    actual_time = 100.0
-    
-    print(f"Ground Truth Actual Runtime: {actual_time}")
-    
-    task_perfect = create_task_with_error("T_0", 0, 1.0, 1.0, actual_time, error_bound=0.0)
-    print(f"0% Error Bound:   Estimated = {task_perfect.estimated_runtime}")
+def generate_test_tasks():
+    return [
+        Task("A", submit_time=0, cpu_req=2.0, mem_req=8.0, actual_runtime=10, estimated_runtime=10),
+        Task("B", submit_time=1, cpu_req=2.0, mem_req=8.0, actual_runtime=15, estimated_runtime=15),
+        Task("C", submit_time=2, cpu_req=1.0, mem_req=4.0, actual_runtime=5,  estimated_runtime=5),
+        Task("D", submit_time=3, cpu_req=1.0, mem_req=4.0, actual_runtime=5,  estimated_runtime=5)
+    ]
 
-    task_low = create_task_with_error("T_10", 0, 1.0, 1.0, actual_time, error_bound=0.10)
-    print(f"10% Error Bound:  Estimated = {task_low.estimated_runtime}")
+def test_algorithms():
+    print("=== Testing First Fit ===")
+    sim_ff = Simulator(policy="first_fit")
+    for t in generate_test_tasks():
+        sim_ff.add_task(t)
+    sim_ff.run()
 
-    task_med = create_task_with_error("T_25", 0, 1.0, 1.0, actual_time, error_bound=0.25)
-    print(f"25% Error Bound:  Estimated = {task_med.estimated_runtime}")
-
-    task_high = create_task_with_error("T_50", 0, 1.0, 1.0, actual_time, error_bound=0.50)
-    print(f"50% Error Bound:  Estimated = {task_high.estimated_runtime}")
+    print("=== Testing Best Fit ===")
+    sim_bf = Simulator(policy="best_fit")
+    for t in generate_test_tasks():
+        sim_bf.add_task(t)
+    sim_bf.run()
 
 if __name__ == "__main__":
-    test_uncertainty_model()
+    test_algorithms()
