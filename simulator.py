@@ -93,7 +93,7 @@ class Simulator:
                     continue
                 
                 # Spin up new machine
-                new_m = Machine(machine_id=len(self.active_machines) + 100, total_cpu=4.0, total_mem=16.0)
+                new_m = Machine(machine_id=len(self.active_machines) + 100, total_cpu=1.0, total_mem=1.0)
                 new_m.power_on_time = self.current_time
                 self.active_machines.append(new_m)
                 selected_machine = new_m
