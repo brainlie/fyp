@@ -28,7 +28,9 @@ class Machine:
         self.available_mem = total_mem
         
         self.active_tasks = []
-
+        
+        self.power_on_time = None
+        self.expected_shutdown_time = None
     def can_fit(self, task):
         """Checks if the machine has enough resources for the task."""
         return self.available_cpu >= task.cpu_req and self.available_mem >= task.mem_req
